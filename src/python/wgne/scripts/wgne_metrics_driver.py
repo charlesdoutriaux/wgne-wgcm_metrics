@@ -104,10 +104,12 @@ regions_values.update(getattr(parameters,"regions_values",{}))
 
 regions_dict = {}
 for var in parameters.vars:
-  rg = regions.get(var,[None,])
+  vr = var.split("_")[0]
+  rg = regions.get(vr,[None,])
   if not isinstance(rg,(list,tuple)):
     rg = [rg,]
-  regions_dict[var] = rg
+  regions_dict[vr] = rg
+print "RGION DICT:",regions_dict
 
 for var in parameters.vars:   #### CALCULATE METRICS FOR ALL VARIABLES IN vars
   try:
@@ -169,6 +171,10 @@ for var in parameters.vars:   #### CALCULATE METRICS FOR ALL VARIABLES IN vars
       metrics_dictionary["RegionalMasking"][region_name]=region
       metrics_dictionary["References"]={}
       for ref in refs:
+        if ref in ["default","alternate"]:
+          refabbv = ref+"Reference"
+        else:
+          refabbv = ref
         metrics_dictionary["References"][ref] = obs_dic[var][obs_dic[var][ref]]
         try:
           if obs_dic[var][obs_dic[var][ref]]["CMIP_CMOR_TABLE"]=="Omon":
@@ -285,11 +291,11 @@ for var in parameters.vars:   #### CALCULATE METRICS FOR ALL VARIABLES IN vars
                             descr[att] = fmt % tuple(vals)
                       metrics_dictionary[model_version]["SimulationDescription"] = descr 
                     
-                  if not metrics_dictionary[model_version].has_key(ref):
-                    metrics_dictionary[model_version][ref] = {'source':onm}
-                  pr = metrics_dictionary[model_version][ref].get(parameters.realization,{})
+                  if not metrics_dictionary[model_version].has_key(refabbv):
+                    metrics_dictionary[model_version][refabbv] = {'source':onm}
+                  pr = metrics_dictionary[model_version][refabbv].get(parameters.realization,{})
                   pr[region_name] = metrics.wgne.compute_metrics(var,dm,do)
-                  metrics_dictionary[model_version][ref][parameters.realization] = pr
+                  metrics_dictionary[model_version][refabbv][parameters.realization] = pr
                   ###########################################################################
              
                   # OUTPUT INTERPOLATED MODEL CLIMATOLOGIES
