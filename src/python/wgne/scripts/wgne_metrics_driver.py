@@ -301,7 +301,7 @@ for var in parameters.vars:   #### CALCULATE METRICS FOR ALL VARIABLES IN vars
                   ## Function needs to take in var name, model clim, obs clim
                   if hasattr(parameters,"compute_custom_metrics"):
                     pr[region_name].update(parameters.compute_custom_metrics(var,dm,do))
-                  metrics_dictionary[model_version][ref][parameters.realization] = pr
+                  metrics_dictionary[model_version][refabbv][parameters.realization] = pr
              
                   # OUTPUT INTERPOLATED MODEL CLIMATOLOGIES
                   # Only the first time thru an obs set (always the same after)
